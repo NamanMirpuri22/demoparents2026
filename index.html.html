@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hanominds — Parent Preview Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #fdf8f1;
+  --warm: #fef3e2;
+  --orange: #f77f00;
+  --orange-lt: #fff3e0;
+  --orange-dk: #d96a00;
+  --green: #2d9e6b;
+  --green-lt: #e8f7f0;
+  --green-dk: #1e7a50;
+  --red: #e84855;
+  --red-lt: #feeaeb;
+  --amber: #f4a11a;
+  --amber-lt: #fff8e6;
+  --brown: #5c3d2e;
+  --text: #2c1810;
+  --text2: #6b4c3b;
+  --text3: #a07860;
+  --border: #e8d5c4;
+  --white: #ffffff;
+  --shadow: rgba(92,61,46,0.12);
+  --card-bg: #fffcf8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--cream);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* BG PATTERN */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image: radial-gradient(circle at 15% 25%, rgba(247,127,0,0.06) 0%, transparent 50%),
+                    radial-gradient(circle at 85% 75%, rgba(45,158,107,0.05) 0%, transparent 50%);
+  pointer-events:none;z-index:0;
+}
+
+/* HEADER */
+.header{
+  position:sticky;top:0;z-index:200;
+  background:rgba(253,248,241,0.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 32px;
+  display:flex;align-items:center;gap:16px;
+  height:64px;
+}
+.logo-wrap{display:flex;align-items:center;gap:12px;}
+.logo-badge{
+  width:40px;height:40px;border-radius:12px;
+  background:linear-gradient(135deg,var(--orange),var(--amber));
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;box-shadow:0 4px 12px rgba(247,127,0,0.25);
+}
+.logo-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text);}
+.logo-tag{font-size:11px;color:var(--text3);}
+.header-center{flex:1;text-align:center;}
+.slide-indicator{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--orange-lt);border:1px solid rgba(247,127,0,0.2);
+  border-radius:20px;padding:5px 16px;font-size:13px;color:var(--orange-dk);font-weight:600;
+}
+.header-right{display:flex;align-items:center;gap:10px;}
+.nav-arrow{
+  width:36px;height:36px;border-radius:10px;border:1px solid var(--border);
+  background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:var(--text2);transition:all 0.2s;
+}
+.nav-arrow:hover{background:var(--orange);color:#fff;border-color:var(--orange);}
+.progress-bar-wrap{
+  position:fixed;top:64px;left:0;right:0;height:3px;background:var(--border);z-index:199;
+}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--orange),var(--amber));transition:width 0.4s ease;}
+
+/* SLIDE CONTAINER */
+.slides-wrap{position:relative;z-index:1;min-height:calc(100vh - 67px);}
+.slide{display:none;animation:slideIn 0.45s cubic-bezier(0.22,1,0.36,1);}
+.slide.active{display:block;}
+@keyframes slideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+/* ===== SLIDE 1 — HERO ===== */
+.hero-slide{
+  min-height:calc(100vh - 67px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:60px 32px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.hero-kicker{
+  display:inline-block;background:var(--orange-lt);border:1px solid rgba(247,127,0,0.25);
+  border-radius:20px;padding:6px 18px;font-size:12px;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;color:var(--orange-dk);margin-bottom:24px;
+}
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(36px,6vw,68px);font-weight:900;
+  line-height:1.1;color:var(--text);margin-bottom:20px;
+}
+.hero-title span{color:var(--orange);}
+.hero-sub{font-size:17px;color:var(--text2);line-height:1.8;max-width:560px;margin:0 auto 36px;}
+.hero-trust{
+  display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;
+}
+.trust-pill{
+  display:flex;align-items:center;gap:8px;
+  background:var(--white);border:1px solid var(--border);
+  border-radius:12px;padding:10px 18px;font-size:13px;font-weight:600;color:var(--text2);
+  box-shadow:0 2px 8px var(--shadow);
+}
+.trust-pill span{font-size:18px;}
+.cta-btn{
+  background:linear-gradient(135deg,var(--orange),var(--orange-dk));
+  color:#fff;border:none;padding:15px 36px;border-radius:14px;
+  font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;
+  cursor:pointer;box-shadow:0 6px 20px rgba(247,127,0,0.3);
+  transition:all 0.25s;letter-spacing:0.02em;
+}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(247,127,0,0.35);}
+.floating-emojis{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.fe{position:absolute;font-size:28px;opacity:0.12;animation:floatUp 6s ease-in-out infinite;}
+.fe:nth-child(1){left:8%;top:20%;animation-delay:0s;}
+.fe:nth-child(2){left:88%;top:15%;animation-delay:1.5s;}
+.fe:nth-child(3){left:5%;top:70%;animation-delay:3s;}
+.fe:nth-child(4){left:92%;top:65%;animation-delay:0.8s;}
+.fe:nth-child(5){left:50%;top:10%;animation-delay:2.2s;}
+@keyframes floatUp{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-18px) rotate(8deg)}}
+
+/* ===== SLIDE 2 — PARENT DOUBT ===== */
+.doubt-slide{padding:60px 40px;max-width:900px;margin:0 auto;}
+.section-eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--orange);margin-bottom:10px;
+}
+.section-title{
+  font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,40px);
+  font-weight:700;color:var(--text);line-height:1.25;margin-bottom:8px;
+}
+.section-lead{font-size:15px;color:var(--text2);line-height:1.7;margin-bottom:36px;}
+.doubt-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:36px;}
+.doubt-card{
+  background:var(--white);border:1px solid var(--border);border-radius:16px;
+  padding:20px 22px;position:relative;overflow:hidden;
+  box-shadow:0 2px 10px var(--shadow);transition:transform 0.2s;
+}
+.doubt-card:hover{transform:translateY(-3px);}
+.doubt-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+}
+.doubt-card.dc1::before{background:linear-gradient(90deg,var(--orange),var(--amber));}
+.doubt-card.dc2::before{background:linear-gradient(90deg,var(--red),#ff8a8a);}
+.doubt-card.dc3::before{background:linear-gradient(90deg,var(--green),#6dd6a4);}
+.doubt-card.dc4::before{background:linear-gradient(90deg,var(--amber),#ffd88a);}
+.doubt-icon{font-size:28px;margin-bottom:10px;}
+.doubt-q{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.doubt-a{font-size:13px;color:var(--text2);line-height:1.6;}
+.doubt-a strong{color:var(--green);}
+.answer-badge{
+  display:inline-block;margin-top:10px;
+  background:var(--green-lt);color:var(--green-dk);
+  border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;
+}
+
+/* ===== SLIDE 3 — SAMPLE LESSON (INTERACTIVE) ===== */
+.lesson-slide{padding:60px 40px;max-width:900px;margin:0 auto;}
+.lesson-demo-box{
+  background:var(--white);border:1px solid var(--border);border-radius:20px;
+  overflow:hidden;box-shadow:0 4px 24px var(--shadow);margin-top:28px;
+}
+.lesson-demo-header{
+  background:linear-gradient(135deg,var(--orange-lt),var(--amber-lt));
+  padding:18px 24px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+}
+.lesson-demo-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;}
+.lesson-demo-meta{font-size:12px;color:var(--text3);}
+.lesson-body{padding:28px 32px;}
+.teacher-says{
+  display:flex;gap:14px;align-items:flex-start;margin-bottom:20px;
+}
+.teacher-avatar{
+  width:44px;height:44px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--orange),var(--amber));
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+}
+.speech-bubble{
+  background:var(--orange-lt);border:1px solid rgba(247,127,0,0.2);
+  border-radius:0 14px 14px 14px;padding:14px 18px;
+  font-size:15px;line-height:1.7;color:var(--text);flex:1;
+}
+.speech-bubble strong{color:var(--orange-dk);}
+.question-box{
+  background:var(--green-lt);border:1px solid rgba(45,158,107,0.2);
+  border-radius:14px;padding:18px 22px;margin:16px 0;
+}
+.question-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--green-dk);margin-bottom:8px;}
+.question-text{font-size:16px;font-weight:600;color:var(--text);}
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.option-btn{
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:10px;padding:12px 16px;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;
+  color:var(--text2);transition:all 0.2s;text-align:left;
+}
+.option-btn:hover{border-color:var(--orange);background:var(--orange-lt);color:var(--orange-dk);}
+.option-btn.correct{background:var(--green-lt);border-color:var(--green);color:var(--green-dk);}
+.option-btn.wrong{background:var(--red-lt);border-color:var(--red);color:var(--red);}
+.result-msg{
+  margin-top:14px;padding:14px 18px;border-radius:10px;
+  font-size:14px;font-weight:600;display:none;
+}
+.result-msg.show{display:block;}
+.result-msg.good{background:var(--green-lt);color:var(--green-dk);border:1px solid rgba(45,158,107,0.25);}
+.result-msg.bad{background:var(--red-lt);color:var(--red);border:1px solid rgba(232,72,85,0.25);}
+
+/* ===== SLIDE 4 — REAL LESSON MOMENT ===== */
+.moment-slide{padding:60px 40px;max-width:900px;margin:0 auto;}
+.moment-grid{display:grid;gap:16px;margin-top:28px;}
+.moment-card{
+  background:var(--white);border:1px solid var(--border);border-radius:16px;
+  padding:24px 28px;display:flex;gap:20px;align-items:flex-start;
+  box-shadow:0 2px 10px var(--shadow);transition:all 0.25s;
+}
+.moment-card:hover{transform:translateX(6px);border-color:var(--orange);}
+.moment-num{
+  width:48px;height:48px;border-radius:14px;flex-shrink:0;
+  background:var(--orange-lt);display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--orange);
+}
+.moment-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.moment-desc{font-size:14px;color:var(--text2);line-height:1.7;}
+.moment-tag{
+  display:inline-block;margin-top:8px;padding:3px 10px;border-radius:6px;
+  font-size:11px;font-weight:700;
+}
+
+/* ===== SLIDE 5 — ICEBERG DEMO FOR PARENTS ===== */
+.iceberg-parent-slide{padding:60px 40px;max-width:900px;margin:0 auto;}
+.iceberg-visual{
+  background:var(--white);border:1px solid var(--border);border-radius:20px;
+  padding:32px;margin-top:28px;box-shadow:0 4px 24px var(--shadow);
+}
+.ice-top{
+  background:linear-gradient(135deg,var(--orange),var(--amber));
+  border-radius:14px 14px 4px 4px;padding:20px 28px;text-align:center;
+  color:#fff;font-weight:700;font-size:16px;display:inline-block;min-width:220px;
+  box-shadow:0 6px 18px rgba(247,127,0,0.25);
+  animation:gentleFloat 3s ease-in-out infinite;
+}
+@keyframes gentleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.ice-divider{
+  border-top:2px dashed rgba(247,127,0,0.35);margin:22px 0;position:relative;
+}
+.ice-divider::after{
+  content:'What parents worry about';position:absolute;right:0;top:-12px;
+  font-size:10px;color:var(--orange);background:var(--white);padding:0 8px;
+  font-weight:700;text-transform:uppercase;letter-spacing:0.06em;
+}
+.ice-below{
+  background:linear-gradient(180deg,rgba(247,127,0,0.06),rgba(45,158,107,0.04));
+  border:1px solid var(--border);border-radius:4px 4px 20px 20px;
+  padding:22px 28px;
+}
+.ice-below ul{list-style:none;}
+.ice-below ul li{
+  padding:8px 0;font-size:14px;color:var(--text2);
+  display:flex;align-items:flex-start;gap:10px;border-bottom:1px solid rgba(232,213,196,0.5);
+}
+.ice-below ul li:last-child{border:none;}
+.ice-check{
+  width:22px;height:22px;border-radius:6px;background:var(--green-lt);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--green);flex-shrink:0;margin-top:1px;
+}
+.reveal-ice-btn{
+  display:block;margin:18px auto 0;
+  background:var(--white);border:1.5px solid var(--orange);
+  color:var(--orange-dk);padding:11px 26px;border-radius:10px;
+  cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;
+  transition:all 0.2s;
+}
+.reveal-ice-btn:hover{background:var(--orange);color:#fff;}
+
+/* ===== SLIDE 6 — LIVE ATM FOR PARENTS ===== */
+.atm-parent-slide{padding:60px 40px;max-width:900px;margin:0 auto;}
+.atm-parent-box{
+  background:var(--white);border:1px solid var(--border);border-radius:20px;
+  padding:32px;margin-top:28px;box-shadow:0 4px 24px var(--shadow);
+}
+.parent-context{
+  background:var(--amber-lt);border:1px solid rgba(244,161,26,0.25);
+  border-radius:12px;padding:16px 20px;margin-bottom:24px;
+  font-size:14px;color:var(--brown);line-height:1.7;
+}
+.parent-context strong{color:var(--orange-dk);}
+.atm-steps-parent{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.atm-step-p{
+  background:var(--card-bg);border:1.5px solid var(--border);border-radius:14px;
+  padding:16px;text-align:center;transition:all 0.35s;opacity:0.35;
+}
+.atm-step-p.lit{
+  opacity:1;border-color:var(--green);background:var(--green-lt);
+  transform:scale(1.04);box-shadow:0 4px 14px rgba(45,158,107,0.15);
+}
+.atm-step-p .sicon{font-size:26px;margin-bottom:8px;display:block;}
+.atm-step-p .stitle{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.atm-step-p .sdesc{font-size:11px;color:var(--text3);line-height:1.5;}
+.atm-prog-wrap{height:6px;background:var(--border);border-radius:3px;margin:16px 0;overflow:hidden;}
+.atm-prog-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--green));width:0%;transition:width 0.4s ease;border-radius:3px;}
+.run-atm-parent{
+  background:linear-gradient(135deg,var(--green),var(--green-dk));
+  border:none;color:#fff;padding:13px 30px;border-radius:12px;
+  cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;
+  display:block;margin:0 auto;transition:all 0.2s;
+  box-shadow:0 4px 14px rgba(45,158,107,0.25);
+}
+.run-atm-parent:hover{transform:translateY(-2px);}
+.atm-msg-p{text-align:center;font-size:13px;color:var(--text3);margin-top:10px;min-height:20px;}
+
+/* ===== SLIDE 7 — COMPANY THINKING ===== */
+.company-slide{padding:60px 40px;max-width:900px;margin:0 auto;}
+.company-story-tabs{display:flex;gap:10px;margin:24px 0 20px;}
+.story-tab{
+  padding:10px 20px;border-radius:10px;border:1.5px solid var(--border);
+  cursor:pointer;font-size:14px;font-weight:700;background:var(--white);
+  color:var(--text3);transition:all 0.2s;
+}
+.story-tab.active{border-color:var(--orange);background:var(--orange-lt);color:var(--orange-dk);}
+.story-panel{display:none;}
+.story-panel.active{display:block;animation:slideIn 0.3s ease;}
+.story-card{
+  background:var(--white);border:1px solid var(--border);border-radius:18px;
+  padding:28px 32px;box-shadow:0 4px 20px var(--shadow);
+}
+.story-hero{display:flex;gap:20px;align-items:flex-start;margin-bottom:20px;}
+.story-logo{
+  width:56px;height:56px;border-radius:16px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:28px;
+  box-shadow:0 4px 12px var(--shadow);
+}
+.story-problem{
+  background:var(--red-lt);border:1px solid rgba(232,72,85,0.2);
+  border-radius:12px;padding:14px 18px;margin:14px 0;
+}
+.story-problem-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--red);margin-bottom:6px;}
+.story-solution{
+  background:var(--green-lt);border:1px solid rgba(45,158,107,0.2);
+  border-radius:12px;padding:14px 18px;margin:14px 0;
+}
+.story-solution-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--green-dk);margin-bottom:6px;}
+.story-insight{
+  background:var(--orange-lt);border-left:3px solid var(--orange);
+  border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0;
+  font-size:14px;font-style:italic;color:var(--brown);line-height:1.7;
+}
+.story-insight strong{color:var(--orange-dk);font-style:normal;}
+
+/* ===== SLIDE 8 — WHAT CHILD GAINS ===== */
+.gains-slide{padding:60px 40px;max-width:900px;margin:0 auto;}
+.gains-compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px;}
+.gains-col{background:var(--white);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 4px 20px var(--shadow);}
+.gains-col-header{padding:18px 22px;font-weight:700;font-size:15px;}
+.gains-col-header.before{background:var(--red-lt);color:var(--red);}
+.gains-col-header.after{background:var(--green-lt);color:var(--green-dk);}
+.gains-list{padding:16px 22px;}
+.gains-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid rgba(232,213,196,0.4);font-size:14px;color:var(--text2);}
+.gains-item:last-child{border:none;}
+.gicon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.gains-quote{
+  background:linear-gradient(135deg,var(--orange-lt),var(--amber-lt));
+  border:1px solid rgba(247,127,0,0.2);border-radius:16px;
+  padding:24px 28px;margin-top:24px;text-align:center;
+}
+.gains-quote p{font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:var(--text);line-height:1.6;}
+.gains-quote p span{color:var(--orange);}
+
+/* ===== SLIDE 9 — STRUCTURE ===== */
+.structure-slide{padding:60px 40px;max-width:900px;margin:0 auto;}
+.day-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:28px 0;}
+.day-card{
+  background:var(--white);border:1px solid var(--border);border-radius:16px;
+  padding:20px 16px;text-align:center;box-shadow:0 2px 10px var(--shadow);
+  transition:all 0.25s;cursor:default;
+}
+.day-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px var(--shadow);}
+.day-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin-bottom:6px;}
+.day-theme{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.day-desc{font-size:12px;color:var(--text2);line-height:1.6;}
+.day-pill{display:inline-block;margin-top:10px;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;}
+.features-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px;}
+.feat-chip{
+  background:var(--white);border:1px solid var(--border);border-radius:12px;
+  padding:12px 14px;text-align:center;font-size:12px;font-weight:600;color:var(--text2);
+}
+.feat-chip span{display:block;font-size:20px;margin-bottom:6px;}
+
+/* ===== SLIDE 10 — CTA ===== */
+.cta-slide{
+  padding:80px 40px;max-width:700px;margin:0 auto;text-align:center;
+  display:flex;flex-direction:column;align-items:center;
+}
+.cta-icon{font-size:56px;margin-bottom:20px;animation:gentleFloat 3s ease-in-out infinite;}
+.cta-title{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,48px);font-weight:900;color:var(--text);margin-bottom:16px;line-height:1.2;}
+.cta-title span{color:var(--orange);}
+.cta-sub{font-size:16px;color:var(--text2);line-height:1.8;max-width:480px;margin:0 auto 36px;}
+.cta-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;width:100%;margin-bottom:36px;}
+.cta-info-card{
+  background:var(--white);border:1px solid var(--border);border-radius:14px;
+  padding:18px 16px;box-shadow:0 2px 10px var(--shadow);
+}
+.cta-info-label{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin-bottom:6px;}
+.cta-info-val{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--orange);}
+.cta-info-sub{font-size:11px;color:var(--text3);margin-top:3px;}
+.whatsapp-btn{
+  background:linear-gradient(135deg,#25d366,#128c7e);
+  color:#fff;border:none;padding:16px 40px;border-radius:14px;
+  font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;
+  cursor:pointer;box-shadow:0 6px 20px rgba(37,211,102,0.3);
+  display:flex;align-items:center;gap:10px;transition:all 0.25s;
+}
+.whatsapp-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(37,211,102,0.35);}
+.hanominds-footer{
+  margin-top:36px;font-size:12px;color:var(--text3);
+  display:flex;align-items:center;gap:8px;
+}
+
+/* DOT NAV */
+.dot-nav{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+  display:flex;gap:8px;z-index:200;
+  background:rgba(253,248,241,0.9);backdrop-filter:blur(8px);
+  border:1px solid var(--border);border-radius:20px;padding:8px 16px;
+  box-shadow:0 4px 16px var(--shadow);
+}
+.dot{
+  width:8px;height:8px;border-radius:50%;background:var(--border);
+  cursor:pointer;transition:all 0.25s;
+}
+.dot.active{background:var(--orange);width:24px;border-radius:4px;}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  .doubt-cards,.gains-compare,.day-cards,.features-row,.cta-cards{grid-template-columns:1fr;}
+  .atm-steps-parent{grid-template-columns:1fr 1fr;}
+  .company-story-tabs{flex-wrap:wrap;}
+  .hero-trust{flex-direction:column;align-items:center;}
+  .options-grid{grid-template-columns:1fr;}
+  .header{padding:0 16px;}
+  .hero-slide,.doubt-slide,.lesson-slide,.moment-slide,.iceberg-parent-slide,
+  .atm-parent-slide,.company-slide,.gains-slide,.structure-slide,.cta-slide{padding:40px 20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo-wrap">
+    <div class="logo-badge">🧠</div>
+    <div>
+      <div class="logo-name">Hanominds</div>
+      <div class="logo-tag">Learning Technologies</div>
+    </div>
+  </div>
+  <div class="header-center">
+    <div class="slide-indicator" id="slide-indicator">Slide 1 of 10</div>
+  </div>
+  <div class="header-right">
+    <button class="nav-arrow" onclick="prevSlide()">←</button>
+    <button class="nav-arrow" onclick="nextSlide()">→</button>
+  </div>
+</header>
+<div class="progress-bar-wrap"><div class="progress-bar" id="prog-bar"></div></div>
+
+<!-- SLIDES -->
+<div class="slides-wrap">
+
+<!-- ===== SLIDE 1: HERO ===== -->
+<div class="slide active" id="slide-1">
+<div class="hero-slide">
+  <div class="floating-emojis">
+    <div class="fe">💡</div><div class="fe">🚀</div><div class="fe">📱</div>
+    <div class="fe">🎯</div><div class="fe">⭐</div>
+  </div>
+  <div class="hero-kicker">For Parents — Hanominds Learning Technologies</div>
+  <h1 class="hero-title">Your Child Deserves<br>More Than <span>Just Notes.</span></h1>
+  <p class="hero-sub">In the next few minutes, experience exactly what your child will learn — and why it will matter for their future in a way textbooks never could.</p>
+  <div class="hero-trust">
+    <div class="trust-pill"><span>🏫</span> Class 6 to Intermediate</div>
+    <div class="trust-pill"><span>⏱</span> 7 Days · 2 Hours Daily</div>
+    <div class="trust-pill"><span>💻</span> 100% Live Online</div>
+    <div class="trust-pill"><span>📍</span> Vizianagaram Based</div>
+  </div>
+  <button class="cta-btn" onclick="nextSlide()">Experience Our Content →</button>
+</div>
+</div>
+
+<!-- ===== SLIDE 2: PARENT DOUBTS ANSWERED ===== -->
+<div class="slide" id="slide-2">
+<div class="doubt-slide">
+  <div class="section-eyebrow">We understand your concerns</div>
+  <h2 class="section-title">Your Questions, Answered Honestly</h2>
+  <p class="section-lead">Every parent asks these 4 questions before enrolling. Here's our straightforward answer to each one.</p>
+  <div class="doubt-cards">
+    <div class="doubt-card dc1">
+      <div class="doubt-icon">🤔</div>
+      <div class="doubt-q">"Will my child actually understand this?"</div>
+      <div class="doubt-a">We use <strong>real examples they already know</strong> — Zomato, Free Fire, ATMs, YouTube. No jargon. No theory for its own sake.</div>
+      <div class="answer-badge">✓ Proven simple language</div>
+    </div>
+    <div class="doubt-card dc2">
+      <div class="doubt-icon">📚</div>
+      <div class="doubt-q">"Is this just another online class with slides?"</div>
+      <div class="doubt-a">No. Every session has <strong>live demos, student questions, and hands-on activities.</strong> Students don't watch — they think and participate.</div>
+      <div class="answer-badge">✓ Interactive, not passive</div>
+    </div>
+    <div class="doubt-card dc3">
+      <div class="doubt-icon">💰</div>
+      <div class="doubt-q">"Is ₹499 worth it for only 7 days?"</div>
+      <div class="doubt-a">In 7 days, your child will understand <strong>how the modern world actually works</strong> — AI, companies, programming basics. That's not a course. That's a mindset shift.</div>
+      <div class="answer-badge">✓ Life-long thinking skills</div>
+    </div>
+    <div class="doubt-card dc4">
+      <div class="doubt-icon">📶</div>
+      <div class="doubt-q">"What if my child misses a session?"</div>
+      <div class="doubt-a">Each session is <strong>self-contained</strong> — no session depends on the previous one being perfect. Recordings are shared and trainers recap at the start.</div>
+      <div class="answer-badge">✓ No student left behind</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== SLIDE 3: SAMPLE LESSON INTERACTIVE ===== -->
+<div class="slide" id="slide-3">
+<div class="lesson-slide">
+  <div class="section-eyebrow">Experience it yourself</div>
+  <h2 class="section-title">A Real 5-Minute Lesson — Right Now</h2>
+  <p class="section-lead">This is exactly how our trainer teaches. You are the student. Go through it like your child would.</p>
+  <div class="lesson-demo-box">
+    <div class="lesson-demo-header">
+      <div class="teacher-avatar">👨‍🏫</div>
+      <div>
+        <div class="lesson-demo-title">Day 1 — How Does Google Search Work?</div>
+        <div class="lesson-demo-meta">Live Session Simulation · Class 6–10 Level</div>
+      </div>
+    </div>
+    <div class="lesson-body">
+      <div class="teacher-says">
+        <div class="teacher-avatar">👨‍🏫</div>
+        <div class="speech-bubble">
+          "You type 'cricket score' in Google. In <strong>0.3 seconds</strong> — the result is there. Now tell me honestly — does Google actually go and search the entire internet in that 0.3 seconds? Or is something smarter happening?"
+        </div>
+      </div>
+      <div class="question-box">
+        <div class="question-label">🎯 Think Like an Engineer — What's your answer?</div>
+        <div class="question-text">When you search on Google, what is it actually searching through?</div>
+        <div class="options-grid">
+          <button class="option-btn" onclick="checkAnswer(this,'wrong')">🌐 The entire live internet — all websites right now</button>
+          <button class="option-btn" onclick="checkAnswer(this,'correct')">📦 A pre-built index Google already made earlier</button>
+          <button class="option-btn" onclick="checkAnswer(this,'wrong')">💻 Your phone's memory and history</button>
+          <button class="option-btn" onclick="checkAnswer(this,'wrong')">📡 Satellite data sent in real time</button>
+        </div>
+        <div class="result-msg" id="result-msg"></div>
+      </div>
+      <div class="teacher-says" style="margin-top:16px;">
+        <div class="teacher-avatar">👨‍🏫</div>
+        <div class="speech-bubble" style="background:var(--green-lt);border-color:rgba(45,158,107,0.2);">
+          "Google sends robots called <strong>'crawlers'</strong> across the internet 24/7. They read every website and store everything in a massive database — called an INDEX. When you search, Google searches THAT index — not the live internet. That's why it's so fast!"
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== SLIDE 4: HOW WE TEACH ===== -->
+<div class="slide" id="slide-4">
+<div class="moment-slide">
+  <div class="section-eyebrow">Our teaching method</div>
+  <h2 class="section-title">How Every Session is Structured</h2>
+  <p class="section-lead">We follow a 4-step method in every session. No child is ever just sitting and listening.</p>
+  <div class="moment-grid">
+    <div class="moment-card">
+      <div class="moment-num">1</div>
+      <div>
+        <div class="moment-title">Hook — A Shocking Question</div>
+        <div class="moment-desc">Every session opens with a question that shocks students into thinking. "Does someone sit inside a traffic signal and change it manually?" — They think they know. They don't. Curiosity opens the brain.</div>
+        <span class="moment-tag" style="background:var(--orange-lt);color:var(--orange-dk);">⚡ Engagement First</span>
+      </div>
+    </div>
+    <div class="moment-card">
+      <div class="moment-num">2</div>
+      <div>
+        <div class="moment-title">Reveal — Real World Explanation</div>
+        <div class="moment-desc">We reveal the actual answer with animated demos and visuals. We connect every concept to something the student has personally used — Zomato, Instagram, Free Fire, ATMs. Never abstract. Always personal.</div>
+        <span class="moment-tag" style="background:var(--green-lt);color:var(--green-dk);">🧠 Deep Understanding</span>
+      </div>
+    </div>
+    <div class="moment-card">
+      <div class="moment-num">3</div>
+      <div>
+        <div class="moment-title">Apply — Student Answers First</div>
+        <div class="moment-desc">Before we explain, we ask students to guess. Wrong answers are celebrated — because a wrong guess means the brain was trying. We then show why the right answer makes sense. This is how memory forms.</div>
+        <span class="moment-tag" style="background:var(--amber-lt);color:var(--brown);">🎯 Active Learning</span>
+      </div>
+    </div>
+    <div class="moment-card">
+      <div class="moment-num">4</div>
+      <div>
+        <div class="moment-title">Connect — "Where Else Does This Happen?"</div>
+        <div class="moment-desc">We end every concept by asking "where else have you seen this?" — A student who can connect one concept to three others has truly learned it. This is what exam toppers naturally do. We teach it explicitly.</div>
+        <span class="moment-tag" style="background:var(--green-lt);color:var(--green-dk);">🔗 Pattern Thinking</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== SLIDE 5: ICEBERG DEMO ===== -->
+<div class="slide" id="slide-5">
+<div class="iceberg-parent-slide">
+  <div class="section-eyebrow">Sample concept — Day 1</div>
+  <h2 class="section-title">The "Iceberg" — Our First Big Lesson</h2>
+  <p class="section-lead">We teach students that every technology has two parts — what you SEE and what is actually HAPPENING. This one concept changes how they think about everything.</p>
+  <div class="iceberg-visual">
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <div class="ice-top">📱 WhatsApp Message Sent ✅</div>
+      <div class="ice-divider" style="width:100%;"></div>
+      <div class="ice-below" id="ice-below-parent" style="width:100%;display:none;">
+        <ul>
+          <li><div class="ice-check">✓</div><div><strong style="color:var(--text);">End-to-end encryption kicks in</strong> — your message is converted into unreadable code before leaving your phone</div></li>
+          <li><div class="ice-check">✓</div><div><strong style="color:var(--text);">Data packets created</strong> — the message is broken into small pieces and each travels a different internet path</div></li>
+          <li><div class="ice-check">✓</div><div><strong style="color:var(--text);">Meta's server in Singapore receives it</strong> — the server verifies both accounts and routes the message</div></li>
+          <li><div class="ice-check">✓</div><div><strong style="color:var(--text);">FCM notification sent</strong> — Google's Firebase Cloud Messaging wakes up the recipient's phone</div></li>
+          <li><div class="ice-check">✓</div><div><strong style="color:var(--text);">Message reassembled and decrypted</strong> — only on the recipient's device. Not even WhatsApp can read it.</div></li>
+        </ul>
+      </div>
+    </div>
+    <button class="reveal-ice-btn" id="ice-btn-p" onclick="revealIceParent()">🔍 Show What's Actually Happening</button>
+    <div style="margin-top:18px;text-align:center;">
+      <p style="font-size:13px;color:var(--text3);font-style:italic;">"When your child sees this for the first time — their eyes go wide. This is the moment they start thinking differently."</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== SLIDE 6: ATM DEMO ===== -->
+<div class="slide" id="slide-6">
+<div class="atm-parent-slide">
+  <div class="section-eyebrow">Interactive demo — exactly as taught in class</div>
+  <h2 class="section-title">The ATM Demo — "In 3 Seconds"</h2>
+  <p class="section-lead">This is one of our most powerful sessions. Press the button below and watch how we teach your child to see what's invisible.</p>
+  <div class="atm-parent-box">
+    <div class="parent-context">
+      <strong>What the trainer asks:</strong> "You put your card in. Money comes out. Simple. But — how does the ATM know your bank balance? Where does that information come from? How does it trust you're the real owner?" Let students guess first. Then we reveal this step by step — and they never look at an ATM the same way again.
+    </div>
+    <div class="atm-steps-parent" id="atm-steps-p">
+      <div class="atm-step-p" id="asp0"><span class="sicon">💳</span><div class="stitle">Card Inserted</div><div class="sdesc">Chip is read, account number extracted</div></div>
+      <div class="atm-step-p" id="asp1"><span class="sicon">🔒</span><div class="stitle">Secure Tunnel</div><div class="sdesc">Encrypted connection to bank server</div></div>
+      <div class="atm-step-p" id="asp2"><span class="sicon">⌨️</span><div class="stitle">PIN Sent</div><div class="sdesc">Encrypted — not even the ATM can read it</div></div>
+      <div class="atm-step-p" id="asp3"><span class="sicon">🏦</span><div class="stitle">Bank Verifies</div><div class="sdesc">Checks balance, checks PIN, approves</div></div>
+      <div class="atm-step-p" id="asp4"><span class="sicon">✅</span><div class="stitle">Signal Sent Back</div><div class="sdesc">"Approved" travels back to ATM</div></div>
+      <div class="atm-step-p" id="asp5"><span class="sicon">💵</span><div class="stitle">Motor Opens</div><div class="sdesc">Physical mechanism releases cash</div></div>
+    </div>
+    <div class="atm-prog-wrap"><div class="atm-prog-fill" id="atm-p-bar"></div></div>
+    <div class="atm-msg-p" id="atm-p-msg">Click to simulate a real ATM transaction — exactly how we show it in class</div>
+    <button class="run-atm-parent" id="atm-p-btn" onclick="runParentATM()">▶ Run ATM Simulation</button>
+  </div>
+</div>
+</div>
+
+<!-- ===== SLIDE 7: COMPANY STORIES ===== -->
+<div class="slide" id="slide-7">
+<div class="company-slide">
+  <div class="section-eyebrow">Day 2 content sample</div>
+  <h2 class="section-title">We Teach Business Thinking Through Stories</h2>
+  <p class="section-lead">On Day 2, your child learns how real companies were born — not from theory, but from real frustration. Select a company to see how we teach it.</p>
+  <div class="company-story-tabs">
+    <button class="story-tab active" onclick="showStory('zomato',this)">🍕 Zomato</button>
+    <button class="story-tab" onclick="showStory('ola',this)">🚕 Ola</button>
+    <button class="story-tab" onclick="showStory('uber',this)">🌍 Uber</button>
+  </div>
+  <div class="story-panel active" id="story-zomato">
+    <div class="story-card">
+      <div class="story-hero">
+        <div class="story-logo" style="background:linear-gradient(135deg,#e23744,#f77f00);">🍕</div>
+        <div><div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;">Zomato</div><div style="font-size:13px;color:var(--text3);">Started 2008 · Worth ₹60,000+ Crore today</div></div>
+      </div>
+      <div class="story-problem"><div class="story-problem-label">😣 The Problem Deepinder Saw</div>Office cafeteria had paper menus. Colleagues wasted 15 minutes every lunch hour just trying to figure out where to eat or what was available. This happened every single day.</div>
+      <div class="story-insight">"What if ALL restaurant menus were available <strong>online, on one website</strong>? No more paper. No more calling. Just open and decide."</div>
+      <div class="story-solution"><div class="story-solution-label">✅ What He Did</div>He scanned restaurant menus and uploaded them to a website called "Foodiebay." No delivery at first — just information. People loved it. He had accidentally found a real problem.</div>
+      <div style="background:var(--amber-lt);border-radius:10px;padding:14px 18px;margin-top:14px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--brown);margin-bottom:6px;">📌 What we teach children from this</div>
+        <div style="font-size:14px;color:var(--text2);line-height:1.7;">Great companies don't start with big plans. They start with <strong style="color:var(--orange-dk);">someone getting frustrated</strong> and deciding to fix it. Your child can do the same.</div>
+      </div>
+    </div>
+  </div>
+  <div class="story-panel" id="story-ola">
+    <div class="story-card">
+      <div class="story-hero">
+        <div class="story-logo" style="background:linear-gradient(135deg,#2d9e6b,#f4a11a);">🚕</div>
+        <div><div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;">Ola</div><div style="font-size:13px;color:var(--text3);">Started 2010 · Operates in 250+ Indian cities</div></div>
+      </div>
+      <div class="story-problem"><div class="story-problem-label">😣 The Moment That Changed Everything</div>Bhavish Aggarwal booked a cab in 2010. The driver stopped midway and demanded extra money. When Bhavish refused — the driver left him stranded on the highway. Alone.</div>
+      <div class="story-insight">"Why is this system so <strong>broken and unaccountable?</strong> What if the cab booking was fixed price, GPS-tracked, and the driver was rated by passengers?"</div>
+      <div class="story-solution"><div class="story-solution-label">✅ Ola's India-First Thinking</div>Unlike Uber (which came from the US and was card-only), Ola understood India. Cash payments. Auto-rickshaws. Hindi-speaking support. Tier-2 city expansion first. Local knowledge beat global money.</div>
+      <div style="background:var(--amber-lt);border-radius:10px;padding:14px 18px;margin-top:14px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--brown);margin-bottom:6px;">📌 What we teach children from this</div>
+        <div style="font-size:14px;color:var(--text2);line-height:1.7;">Knowing your customer better than your competitor is more powerful than having more money. <strong style="color:var(--orange-dk);">Understanding people is a skill.</strong> And it can be learned.</div>
+      </div>
+    </div>
+  </div>
+  <div class="story-panel" id="story-uber">
+    <div class="story-card">
+      <div class="story-hero">
+        <div class="story-logo" style="background:linear-gradient(135deg,#1a1a1a,#555);">🌍</div>
+        <div><div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;">Uber</div><div style="font-size:13px;color:var(--text3);">Started 2009 · San Francisco · Global giant</div></div>
+      </div>
+      <div class="story-problem"><div class="story-problem-label">😣 The Problem Travis Saw</div>Paris, 2008. Snowy night. Travis Kalanick and his friend couldn't find a cab for over an hour — despite being in a major world city. That frustration became a $70 billion idea.</div>
+      <div class="story-insight">"What if you could press <strong>one button</strong> on your phone and a car would appear at your location?"</div>
+      <div class="story-solution"><div class="story-solution-label">✅ Why Ola Beat Uber in India</div>Uber assumed India worked like the USA — cards, English, premium pricing. Ola knew India — cash, autos, regional languages, small-city focus. Same idea. Better local knowledge. Different outcome.</div>
+      <div style="background:var(--amber-lt);border-radius:10px;padding:14px 18px;margin-top:14px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--brown);margin-bottom:6px;">📌 What we teach children from this</div>
+        <div style="font-size:14px;color:var(--text2);line-height:1.7;">A great idea is not enough. You need to understand the people you're building it for. <strong style="color:var(--orange-dk);">Context is everything.</strong> This is critical thinking in real life.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== SLIDE 8: WHAT CHILD GAINS ===== -->
+<div class="slide" id="slide-8">
+<div class="gains-slide">
+  <div class="section-eyebrow">The real transformation</div>
+  <h2 class="section-title">Before & After — What Changes in Your Child</h2>
+  <p class="section-lead">This is not about marks. This is about how your child's brain approaches every problem they face — in school and in life.</p>
+  <div class="gains-compare">
+    <div class="gains-col">
+      <div class="gains-col-header before">❌ Before the Bootcamp</div>
+      <div class="gains-list">
+        <div class="gains-item"><div class="gicon">😶</div>Uses apps and technology without ever questioning how they work</div>
+        <div class="gains-item"><div class="gicon">📖</div>Studies for marks — memorises answers, not understanding</div>
+        <div class="gains-item"><div class="gicon">🤷</div>Hears "AI" and "coding" but has no idea what they actually mean</div>
+        <div class="gains-item"><div class="gicon">😴</div>Doesn't know what career to aim for beyond "doctor or engineer"</div>
+        <div class="gains-item"><div class="gicon">🧩</div>Sees problems as obstacles, not as opportunities to solve</div>
+      </div>
+    </div>
+    <div class="gains-col">
+      <div class="gains-col-header after">✅ After the Bootcamp</div>
+      <div class="gains-list">
+        <div class="gains-item"><div class="gicon">🔍</div>Asks "how does this actually work?" when they see any technology</div>
+        <div class="gains-item"><div class="gicon">🧠</div>Understands AI, Python, and how companies are built at a basic level</div>
+        <div class="gains-item"><div class="gicon">💡</div>Connects classroom concepts to real-world applications automatically</div>
+        <div class="gains-item"><div class="gicon">🎯</div>Has awareness of 5+ career paths in technology they never knew existed</div>
+        <div class="gains-item"><div class="gicon">🚀</div>Sees everyday problems as things that could be solved — by them</div>
+      </div>
+    </div>
+  </div>
+  <div class="gains-quote">
+    <p>"We don't teach your child <span>what to think.</span><br>We teach them <span>how to think.</span>"</p>
+  </div>
+</div>
+</div>
+
+<!-- ===== SLIDE 9: STRUCTURE ===== -->
+<div class="slide" id="slide-9">
+<div class="structure-slide">
+  <div class="section-eyebrow">7-Day roadmap</div>
+  <h2 class="section-title">What Happens Every Day</h2>
+  <p class="section-lead">Each day is a complete, self-contained learning experience. 2 hours. Live. Interactive. No boring lectures.</p>
+  <div class="day-cards">
+    <div class="day-card">
+      <div class="day-label">Day 1 – 2</div>
+      <div class="day-theme">Think Smart</div>
+      <div class="day-desc">How technology works at the backend. ATMs, internet, computers — explained simply with live demos.</div>
+      <div class="day-pill" style="background:var(--orange-lt);color:var(--orange-dk);">🧠 Mindset</div>
+    </div>
+    <div class="day-card">
+      <div class="day-label">Day 3 – 4</div>
+      <div class="day-theme">Tech & Business</div>
+      <div class="day-desc">How Zomato, Ola, and Uber came to exist. What makes a company valuable. CEO thinking unpacked.</div>
+      <div class="day-pill" style="background:var(--amber-lt);color:var(--brown);">🏢 Business</div>
+    </div>
+    <div class="day-card">
+      <div class="day-label">Day 5 – 6</div>
+      <div class="day-theme">Practical Learning</div>
+      <div class="day-desc">AI in action, Python basics, logical thinking exercises. Students write their first lines of code.</div>
+      <div class="day-pill" style="background:var(--green-lt);color:var(--green-dk);">💻 Hands-On</div>
+    </div>
+    <div class="day-card">
+      <div class="day-label">Day 7</div>
+      <div class="day-theme">Big Surprise</div>
+      <div class="day-desc">A special final session with career guidance, certificates, and an activity that ties it all together.</div>
+      <div class="day-pill" style="background:var(--red-lt);color:var(--red);">🎉 Celebration</div>
+    </div>
+  </div>
+  <div class="features-row">
+    <div class="feat-chip"><span>📖</span>Free Book Included</div>
+    <div class="feat-chip"><span>🎥</span>Live via Google Meet</div>
+    <div class="feat-chip"><span>🏆</span>Certificate Awarded</div>
+    <div class="feat-chip"><span>🇮🇳</span>Telugu & English</div>
+  </div>
+</div>
+</div>
+
+<!-- ===== SLIDE 10: CTA ===== -->
+<div class="slide" id="slide-10">
+<div class="cta-slide">
+  <div class="cta-icon">🌟</div>
+  <h2 class="cta-title">Give Your Child a<br><span>Head Start</span> in Life.</h2>
+  <p class="cta-sub">7 days. 2 hours a day. ₹499 total. Your child gains knowledge that most college students in India don't have.</p>
+  <div class="cta-cards">
+    <div class="cta-info-card">
+      <div class="cta-info-label">Full Program Fee</div>
+      <div class="cta-info-val">₹499</div>
+      <div class="cta-info-sub">One-time · All 7 Days</div>
+    </div>
+    <div class="cta-info-card">
+      <div class="cta-info-label">Daily Sessions</div>
+      <div class="cta-info-val">2 hrs</div>
+      <div class="cta-info-sub">Live · Interactive · Fun</div>
+    </div>
+    <div class="cta-info-card">
+      <div class="cta-info-label">Target Students</div>
+      <div class="cta-info-val">6–12</div>
+      <div class="cta-info-sub">Class 6 to Inter 2nd Year</div>
+    </div>
+  </div>
+  <button class="whatsapp-btn" onclick="alert('Send \"HI\" to 70939 92970 on WhatsApp to enroll!')">
+    <span style="font-size:22px;">💬</span> Send "HI" on WhatsApp — 70939 92970
+  </button>
+  <div class="hanominds-footer">
+    <div class="logo-badge" style="width:28px;height:28px;border-radius:8px;font-size:14px;">🧠</div>
+    <span>Hanominds Learning Technologies · Vizianagaram, Andhra Pradesh</span>
+  </div>
+</div>
+</div>
+
+</div><!-- end slides-wrap -->
+
+<!-- DOT NAV -->
+<div class="dot-nav" id="dot-nav"></div>
+
+<script>
+let currentSlide = 1;
+const totalSlides = 10;
+
+function buildDots(){
+  const nav=document.getElementById('dot-nav');
+  for(let i=1;i<=totalSlides;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(i===1?' active':'');
+    d.onclick=()=>goSlide(i);
+    nav.appendChild(d);
+  }
+}
+
+function goSlide(n){
+  document.getElementById('slide-'+currentSlide).classList.remove('active');
+  document.querySelectorAll('.dot')[currentSlide-1].classList.remove('active');
+  currentSlide=Math.max(1,Math.min(totalSlides,n));
+  document.getElementById('slide-'+currentSlide).classList.add('active');
+  document.querySelectorAll('.dot')[currentSlide-1].classList.add('active');
+  document.getElementById('slide-indicator').textContent='Slide '+currentSlide+' of '+totalSlides;
+  document.getElementById('prog-bar').style.width=(currentSlide/totalSlides*100)+'%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function nextSlide(){goSlide(currentSlide+1);}
+function prevSlide(){goSlide(currentSlide-1);}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') nextSlide();
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') prevSlide();
+});
+
+// SLIDE 3 QUIZ
+let answered=false;
+function checkAnswer(btn,type){
+  if(answered) return;
+  answered=true;
+  const opts=document.querySelectorAll('.option-btn');
+  opts.forEach(o=>o.disabled=true);
+  const msg=document.getElementById('result-msg');
+  if(type==='correct'){
+    btn.classList.add('correct');
+    msg.className='result-msg show good';
+    msg.innerHTML='🎉 <strong>Correct!</strong> Google built its index by sending "crawlers" to read every website. When you search, Google searches this index — not the live internet. That\'s why it\'s so fast!';
+  } else {
+    btn.classList.add('wrong');
+    msg.className='result-msg show bad';
+    msg.innerHTML='🤔 <strong>Not quite!</strong> The correct answer is: Google searches a pre-built index. It sends robots called "crawlers" 24/7 to read the internet and store everything. Your search queries THAT stored copy — not the live web.';
+    opts.forEach(o=>{ if(o.textContent.includes('pre-built')) o.classList.add('correct'); });
+  }
+}
+
+// SLIDE 5 ICEBERG
+let iceParentShown=false;
+function revealIceParent(){
+  iceParentShown=!iceParentShown;
+  const b=document.getElementById('ice-below-parent');
+  const btn=document.getElementById('ice-btn-p');
+  b.style.display=iceParentShown?'block':'none';
+  if(iceParentShown){
+    b.style.animation='slideIn 0.4s ease';
+    btn.textContent='🙈 Hide the Backend Process';
+  } else {
+    btn.textContent='🔍 Show What\'s Actually Happening';
+  }
+}
+
+// SLIDE 6 ATM
+let atmPRunning=false, atmPStep=0;
+function runParentATM(){
+  if(atmPRunning) return;
+  if(atmPStep>=6){
+    for(let i=0;i<6;i++) document.getElementById('asp'+i).classList.remove('lit');
+    atmPStep=0;
+    document.getElementById('atm-p-btn').textContent='▶ Run Again';
+    document.getElementById('atm-p-bar').style.width='0%';
+    document.getElementById('atm-p-msg').textContent='Click to simulate again';
+    return;
+  }
+  atmPRunning=true;
+  document.getElementById('atm-p-btn').disabled=true;
+  const msgs=['Reading chip — account number extracted...','Creating encrypted tunnel to your bank...','PIN encrypted and sent — bank only can read it...','Bank verifies PIN and checks balance...','Approval signal travels back to ATM...','Motor mechanism opens — cash released! ✅'];
+  function step(){
+    if(atmPStep>=6){
+      atmPRunning=false;
+      document.getElementById('atm-p-btn').disabled=false;
+      document.getElementById('atm-p-btn').textContent='🔄 Run Again';
+      document.getElementById('atm-p-msg').textContent='Total time in real life: under 3 seconds. All 6 steps. ⚡';
+      return;
+    }
+    if(atmPStep>0) document.getElementById('asp'+(atmPStep-1)).classList.remove('lit');
+    document.getElementById('asp'+atmPStep).classList.add('lit');
+    document.getElementById('atm-p-bar').style.width=((atmPStep+1)/6*100)+'%';
+    document.getElementById('atm-p-msg').textContent=msgs[atmPStep];
+    atmPStep++;
+    setTimeout(()=>{atmPRunning=false;document.getElementById('atm-p-btn').disabled=false;},500);
+  }
+  step();
+}
+
+// SLIDE 7 COMPANY TABS
+function showStory(id,btn){
+  document.querySelectorAll('.story-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.story-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('story-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+buildDots();
+document.getElementById('prog-bar').style.width=(1/totalSlides*100)+'%';
+</script>
+</body>
+</html>
